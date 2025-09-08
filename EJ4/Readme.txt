@@ -13,5 +13,5 @@ CSV: Para leer y escribir archivos CSV con las probabilidades de transición y l
 OS: Se usa para manejar rutas de archivos y directorios para poder encontrar correctamente los archivos csv.
 
 Instalación
-pip install numpy
-La libreria os y csv se instalan al instalar python (son parte de la biblioteca estandar de python).
+numpy: pip install numpy
+OS y CSV: La libreria os y csv se instalan al instalar python (son parte de la biblioteca estandar de python).
