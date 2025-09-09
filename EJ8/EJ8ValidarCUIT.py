@@ -28,17 +28,19 @@ def validar_cuit(cuit: str) -> bool:
 
 
 # --- Programa principal con loop ---
-print("Validador de CUIT/CUIL (escriba 'salir' para terminar)\n")
+if __name__ == "__main__":
+    print("Validador de CUIT/CUIL (escriba 'salir' para terminar)\n")
+    
+    while True:
+        cuit_ingresado = input("Ingrese un CUIT/CUIL: ")
+    
+        if cuit_ingresado.lower() == "salir":
+            print("Programa finalizado.")
+            break
+    
+        if validar_cuit(cuit_ingresado):
+            print("El CUIT/CUIL es válido\n")
+        else:
+            print("El CUIT/CUIL es inválido\n")
 
-while True:
-    cuit_ingresado = input("Ingrese un CUIT/CUIL: ")
-
-    if cuit_ingresado.lower() == "salir":
-        print("Programa finalizado.")
-        break
-
-    if validar_cuit(cuit_ingresado):
-        print("El CUIT/CUIL es válido\n")
-    else:
-        print("El CUIT/CUIL es inválido\n")
 
