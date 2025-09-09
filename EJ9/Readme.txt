@@ -25,6 +25,9 @@ Facilita el cálculo de las frecuencias de los símbolos en el texto original.
 collections.namedtuple: Usada en la implementación de Huffman.
 Define una estructura simple (Nodo) para representar los nodos del árbol binario de Huffman.
 
+OS: Se utiliza para gestionar rutas de archivos y directorios de manera independiente del sistema operativo. 
+Permite obtener la ruta del directorio actual y construir las rutas completas de los archivos donde se guardan y leen los registros.
+
 Instalación
 
-Todas las librerías usadas (socket, json, heapq, collections) forman parte de la biblioteca estándar de Python.
+Todas las librerías usadas (socket, json, heapq, collections, os) forman parte de la biblioteca estándar de Python.
