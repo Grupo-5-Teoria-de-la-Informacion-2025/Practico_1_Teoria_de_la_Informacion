@@ -116,42 +116,9 @@ class CalculadoraEntropia:
             print(f"Error al analizar {nombre_archivo}: {str(e)}")
             return None
     
-    # Analiza todos los archivos en un directorio
-    def analizar_directorio(self):
-        directorio = os.path.dirname(os.path.abspath(__file__))
-        extensiones_interesantes = ['.txt', '.exe', '.zip', '.pdf', '.jpg', '.png', '.mp3', '.mp4', '.doc', '.xls', '.bin', '.bmp']
-        
-        for archivo in os.listdir(directorio):
-            ruta_completa = os.path.join(directorio, archivo)
-            if os.path.isfile(ruta_completa):
-                extension = os.path.splitext(archivo)[1].lower()
-                if extension in extensiones_interesantes:
-                    print(f"Analizando: {archivo}")
-                    resultado = self.analizar_archivo(archivo)
-                    if resultado:
-                        self.resultados[archivo] = resultado
-    
-    # Muestra los resultados de forma tabular
-    def mostrar_resultados(self):
-        if not self.resultados:
-            print("No hay resultados para mostrar.")
-            return
-        
-        print("\n" + "="*120)
-        print("RESULTADOS DE ANÁLISIS DE ENTROPÍA Y REDUNDANCIA")
-        print("="*120)
-        print(f"{'Archivo':<20} {'Ext':<6} {'Tamaño':<10} {'Ent.Indep':<10} {'Red.Indep':<10} {'Ent.Dep1':<10} {'Red.Dep1':<10} {'Ent.Dep2':<10} {'Red.Dep2':<10}")
-        print("-"*120)
-        
-        for nombre, datos in self.resultados.items():
-            print(f"{nombre:<20} {datos['extension']:<6} {datos['tamaño']:<10} "
-                  f"{datos['entropia_independiente']:<10.3f} {datos['redundancia_independiente']:<10.3f} "
-                  f"{datos['entropia_dependiente_1']:<10.3f} {datos['redundancia_dependiente_1']:<10.3f} "
-                  f"{datos['entropia_dependiente_2']:<10.3f} {datos['redundancia_dependiente_2']:<10.3f}")
-   
     # Genera un reporte detallado
-    def generar_reporte(self):
-        if not self.resultados:
+    def generar_reporte(self, resultado):
+        if not resultado:
             print("No hay datos para generar reporte.")
             return
         
@@ -160,43 +127,21 @@ class CalculadoraEntropia:
         print("="*80)
         
         # Estadísticas generales
-        total_archivos = len(self.resultados)
-        tamanos = [datos['tamaño'] for datos in self.resultados.values()]
-        entropias_indep = [datos['entropia_independiente'] for datos in self.resultados.values()]
+        archivo = resultado['nombre']
+        print(f"\nINFORMACIÓN DEL ARCHIVO:")
+        print(f"Nombre: {archivo}")
+        print(f"Extensión: {resultado['extension']}")
+        print(f"Tamaño: {resultado['tamaño']} bytes")
         
-        print(f"\nESTADÍSTICAS GENERALES:")
-        print(f"Total de archivos analizados: {total_archivos}")
-        print(f"Tamaño total: {sum(tamanos):,} bytes")
-        print(f"Tamaño promedio: {sum(tamanos)/len(tamanos):,.0f} bytes")
-        print(f"Entropía independiente promedio: {sum(entropias_indep)/len(entropias_indep):.3f} bits")
-        
-        # Análisis por tipo de archivo
-        extensiones = {}
-        for datos in self.resultados.values():
-            ext = datos['extension']
-            extensiones.setdefault(ext, []).append(datos['entropia_independiente'])
-        
-        print(f"\nANÁLISIS POR TIPO DE ARCHIVO:")
-        for ext, entropias in extensiones.items():
-            promedio = sum(entropias) / len(entropias)
-            print(f"{ext}: {len(entropias)} archivos, entropía promedio: {promedio:.3f} bits")
-        
-        # Archivos con mayor y menor entropía
-        archivo_max_entropia = max(self.resultados.items(), key=lambda x: x[1]['entropia_independiente'])
-        archivo_min_entropia = min(self.resultados.items(), key=lambda x: x[1]['entropia_independiente'])
-        
-        print(f"\nARCHIVOS EXTREMOS:")
-        print(f"Mayor entropía: {archivo_max_entropia[0]} ({archivo_max_entropia[1]['entropia_independiente']:.3f} bits)")
-        print(f"Menor entropía: {archivo_min_entropia[0]} ({archivo_min_entropia[1]['entropia_independiente']:.3f} bits)")
-        
-        # Comparación entre entropía independiente y dependiente
-        diferencias = [datos['entropia_independiente'] - datos['entropia_dependiente_1'] for datos in self.resultados.values()]
-        
-        print(f"\nCOMPARACIÓN ENTROPÍA INDEPENDIENTE vs DEPENDIENTE:")
-        print(f"Diferencia promedio: {sum(diferencias)/len(diferencias):.3f} bits")
-        print(f"Archivos con mayor diferencia: {sum(1 for d in diferencias if d > 1)}")
-        print(f"Archivos con menor diferencia: {sum(1 for d in diferencias if d < 0.5)}")
-        
+        # Estadísticas de entropía y redundancia
+        print(f"\nENTROPÍA Y REDUNDANCIA:")
+        print(f"Entropía Independiente: {resultado['entropia_independiente']:.3f} bits")
+        print(f"Redundancia Independiente: {resultado['redundancia_independiente']:.3f} bits")
+        print(f"Entropía Dependiente (Orden 1): {resultado['entropia_dependiente_1']:.3f} bits")
+        print(f"Redundancia Dependiente (Orden 1): {resultado['redundancia_dependiente_1']:.3f} bits")
+        print(f"Entropía Dependiente (Orden 2): {resultado['entropia_dependiente_2']:.3f} bits")
+        print(f"Redundancia Dependiente (Orden 2): {resultado['redundancia_dependiente_2']:.3f} bits")
+
         # Interpretación de resultados
         print(f"\nINTERPRETACIÓN:")
         print(f"• Archivos con entropía < 4 bits: Muy compresibles (texto, patrones repetitivos)")
@@ -212,44 +157,12 @@ if __name__ == "__main__":
     
     calc = CalculadoraEntropia()
     
-    # Definimos un menú para la aplicación
-    print("\nOpciones:")
-    print("1. Analizar archivo específico")
-    print("2. Analizar todos los archivos del directorio del script")
-    print("3. Mostrar resultados")
-    print("4. Generar reporte detallado")
-    print("5. Salir")
-
-    opcion = input("\nSeleccione una opción (1-5): ").strip()
-
-    while opcion != "5":
-        if opcion == "1":
-            archivo = input("Ingrese el nombre del archivo (en la misma carpeta): ").strip()
-            resultado = calc.analizar_archivo(archivo)
-            if resultado:
-                calc.resultados[archivo] = resultado
-                print("✓ Análisis completado")
-            else:
-                print("✗ No se pudo analizar el archivo")
-        
-        elif opcion == "2":
-            print("Analizando archivos del directorio del script...")
-            calc.analizar_directorio()
-            print(f"✓ Se analizaron {len(calc.resultados)} archivos")
-        
-        elif opcion == "3":
-            calc.mostrar_resultados()
-        
-        elif opcion == "4":
-            calc.generar_reporte()
-        
-        else:
-            print("Opción no válida. Intente de nuevo. \n")
-            
-        print("\nOpciones:")
-        print("1. Analizar archivo específico")
-        print("2. Analizar todos los archivos del directorio del script")
-        print("3. Mostrar resultados")
-        print("4. Generar reporte detallado")
-        print("5. Salir")
-        opcion = input("\nSeleccione una opción (1-5): ").strip()
+    # Pedir nombre del archivo
+    archivo = input("Ingrese el nombre del archivo (en la misma carpeta): ").strip()
+    
+    # Analizar archivo y generar reporte
+    resultado = calc.analizar_archivo(archivo)
+    if resultado:
+        calc.generar_reporte(resultado)
+    else:
+        print("✗ No se pudo analizar el archivo")
