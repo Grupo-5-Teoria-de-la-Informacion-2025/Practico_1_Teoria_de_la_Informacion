@@ -2,6 +2,7 @@ import socket
 import heapq
 import json
 from collections import Counter, namedtuple
+import os
 
 # ======== HUFFMAN =========
 class Nodo(namedtuple("Nodo", ["simbolo", "izq", "der"])):
@@ -97,13 +98,15 @@ def comprimir_fano(texto):
 
 # ======== CLIENTE PRINCIPAL =========
 if __name__ == "__main__":
-    servidor = "127.0.0.1"
+    servidor = "127.0.0.1" #Ingresar dirección IP del servidor para hacer la conexión correctamente
     puerto = 5555
     cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cliente.connect((servidor, puerto))
 
     # Leer archivo de texto original
-    with open("archivo.txt", "r", encoding="utf-8") as f:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    archivo_path = os.path.join(base_dir, "archivo.txt")
+    with open(archivo_path, "r", encoding="utf-8") as f:
         texto = f.read().strip()
 
     # Aplicar los tres métodos
@@ -137,3 +140,4 @@ if __name__ == "__main__":
 
     print("[*] Todas las versiones enviadas.")
     cliente.close()
+
