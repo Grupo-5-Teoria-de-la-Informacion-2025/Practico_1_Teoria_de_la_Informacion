@@ -75,8 +75,9 @@ def ejecutar(archivo_entrada, archivo_salida):
 
     print(f"\nResultados guardados en {ruta_salida}")
 
-def main():
-    while True:
+
+if __name__ == "__main__":
+        while True:
         print("\n=== Cálculo de Capacidad de Canal ===")
         print("1) Canal Binario (R=2)")
         print("2) Canal Ternario (R=3)")
@@ -96,6 +97,4 @@ def main():
         else:
             print("Opción inválida, intente nuevamente.")
 
-if __name__ == "__main__":
-    main()
 
