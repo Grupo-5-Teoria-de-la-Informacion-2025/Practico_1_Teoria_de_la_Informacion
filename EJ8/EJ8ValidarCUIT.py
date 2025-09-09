@@ -34,10 +34,11 @@ while True:
     cuit_ingresado = input("Ingrese un CUIT/CUIL: ")
 
     if cuit_ingresado.lower() == "salir":
-        print("👋 Programa finalizado.")
+        print("Programa finalizado.")
         break
 
     if validar_cuit(cuit_ingresado):
-        print("✅ El CUIT/CUIL es válido\n")
+        print("El CUIT/CUIL es válido\n")
     else:
-        print("❌ El CUIT/CUIL es inválido\n")
+        print("El CUIT/CUIL es inválido\n")
+
